@@ -1,0 +1,78 @@
+version: "3.9"
+
+services:
+
+  postgres:
+    image: postgres:16
+    container_name: resume-postgres
+
+    restart: always
+
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: resume_ai
+
+    ports:
+      - "5432:5432"
+
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+    networks:
+      - resume-network
+
+
+  redis:
+    image: redis:7.4
+
+    container_name: resume-redis
+
+    restart: always
+
+    ports:
+      - "6379:6379"
+
+    volumes:
+      - redis_data:/data
+
+    networks:
+      - resume-network
+
+
+  backend:
+
+    build:
+      context: ./backend
+
+    container_name: resume-backend
+
+    restart: always
+
+    depends_on:
+      - postgres
+      - redis
+
+    ports:
+      - "5000:5000"
+
+    env_file:
+      - ./backend/.env
+
+    volumes:
+      - ./backend:/app
+
+    networks:
+      - resume-network
+
+
+volumes:
+
+  postgres_data:
+
+  redis_data:
+
+
+networks:
+
+  resume-network:

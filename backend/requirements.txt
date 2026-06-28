@@ -8,3 +8,4 @@ passlib
 python-multipart
 pydantic-settings
 email-validator
+redis

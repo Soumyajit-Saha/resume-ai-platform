@@ -24,6 +24,13 @@ job_service = JobService()
 report_service = ReportService()
 
 
+@app.get("/health")
+def health():
+    return {
+        "status": "UP"
+    }
+
+
 @app.post("/register", response_model=Token)
 def register_user(user_data: CreateUserRequest):
     session = database.get_session()
